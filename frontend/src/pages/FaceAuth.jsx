@@ -39,7 +39,7 @@ export default function FaceAuth({
 
         console.log(error);
 
-        alert("❌ Error Loading Models");
+        console.log("❌ Error Loading Models");;
 
       }
     };
@@ -56,7 +56,7 @@ export default function FaceAuth({
 
     if (!modelsLoaded) {
 
-      alert("⏳ Models are still loading...");
+      console.log("⏳ Models are still loading...");
       return;
 
     }
@@ -77,9 +77,7 @@ export default function FaceAuth({
       if (detection) {
 
         console.log(detection);
-
         alert("✅ Face Verified Successfully");
-
         /* SUCCESS CALLBACK */
 
         if (onSuccess) {
@@ -90,7 +88,7 @@ export default function FaceAuth({
 
       } else {
 
-        alert("❌ No Face Found");
+        alert("❌ No Face Found")
 
       }
 
@@ -98,7 +96,7 @@ export default function FaceAuth({
 
       console.log(error);
 
-      alert("❌ Face Detection Failed");
+      alert("❌ Face Detection Failed")
 
     }
   };

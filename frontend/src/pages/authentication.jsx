@@ -9,8 +9,9 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { AuthContext } from '../contexts/AuthContext';
 import { Snackbar } from '@mui/material';
+
+import { AuthContext } from '../contexts/AuthContext';
 
 import FaceAuth from './FaceAuth';
 
@@ -19,19 +20,19 @@ const defaultTheme = createTheme();
 export default function Authentication() {
 
     const [username, setUsername] =
-        React.useState();
+        React.useState("");
 
     const [password, setPassword] =
-        React.useState();
+        React.useState("");
 
     const [name, setName] =
-        React.useState();
+        React.useState("");
 
     const [error, setError] =
-        React.useState();
+        React.useState("");
 
     const [message, setMessage] =
-        React.useState();
+        React.useState("");
 
     const [formState, setFormState] =
         React.useState(0);
@@ -39,7 +40,7 @@ export default function Authentication() {
     const [open, setOpen] =
         React.useState(false);
 
-    /* FACE VERIFIED STATE */
+    /* FACE VERIFIED */
 
     const [faceVerified, setFaceVerified] =
         React.useState(false);
@@ -49,26 +50,29 @@ export default function Authentication() {
         handleLogin
     } = React.useContext(AuthContext);
 
-    let handleAuth = async () => {
+    const handleAuth = async () => {
 
         try {
 
             if (!faceVerified) {
 
                 alert("❌ Please verify face first");
-                return;
 
+                return;
             }
+
+            /* LOGIN */
 
             if (formState === 0) {
 
-                let result =
-                    await handleLogin(
-                        username,
-                        password
-                    );
+                await handleLogin(
+                    username,
+                    password
+                );
 
             }
+
+            /* REGISTER */
 
             if (formState === 1) {
 
@@ -79,10 +83,6 @@ export default function Authentication() {
                         password
                     );
 
-                console.log(result);
-
-                setUsername("");
-
                 setMessage(result);
 
                 setOpen(true);
@@ -91,8 +91,13 @@ export default function Authentication() {
 
                 setFormState(0);
 
+                setName("");
+
+                setUsername("");
+
                 setPassword("");
 
+                setFaceVerified(false);
             }
 
         } catch (err) {
@@ -100,10 +105,10 @@ export default function Authentication() {
             console.log(err);
 
             let message =
-                (err.response.data.message);
+                err?.response?.data?.message
+                || "Something went wrong";
 
             setError(message);
-
         }
     }
 
@@ -118,6 +123,8 @@ export default function Authentication() {
             >
 
                 <CssBaseline />
+
+                {/* LEFT IMAGE SECTION */}
 
                 <Grid
                     item
@@ -143,6 +150,8 @@ export default function Authentication() {
                             'center',
                     }}
                 />
+
+                {/* RIGHT AUTH SECTION */}
 
                 <Grid
                     item
@@ -175,17 +184,21 @@ export default function Authentication() {
 
                         </Avatar>
 
+                        {/* LOGIN / REGISTER SWITCH */}
+
                         <div>
 
                             <Button
                                 variant={
                                     formState === 0
                                         ? "contained"
-                                        : ""
+                                        : "outlined"
                                 }
 
                                 onClick={() => {
-                                    setFormState(0)
+
+                                    setFormState(0);
+
                                 }}
                             >
 
@@ -194,14 +207,18 @@ export default function Authentication() {
                             </Button>
 
                             <Button
+                                sx={{ ml: 2 }}
+
                                 variant={
                                     formState === 1
                                         ? "contained"
-                                        : ""
+                                        : "outlined"
                                 }
 
                                 onClick={() => {
-                                    setFormState(1)
+
+                                    setFormState(1);
+
                                 }}
                             >
 
@@ -211,10 +228,12 @@ export default function Authentication() {
 
                         </div>
 
+                        {/* FORM */}
+
                         <Box
-                            component="form"
+                            component="div"
                             noValidate
-                            sx={{ mt: 1 }}
+                            sx={{ mt: 1, width: "100%" }}
                         >
 
                             {
@@ -226,15 +245,16 @@ export default function Authentication() {
                                             fullWidth
                                             label="Full Name"
                                             value={name}
-                                            autoFocus
-                                            onChange={(e) =>
+                                            onChange={(e) => {
+
                                                 setName(
                                                     e.target.value
                                                 )
-                                            }
+
+                                            }}
                                         />
                                     )
-                                    : <></>
+                                    : null
                             }
 
                             <TextField
@@ -243,37 +263,43 @@ export default function Authentication() {
                                 fullWidth
                                 label="Username"
                                 value={username}
-                                autoFocus
-                                onChange={(e) =>
+                                onChange={(e) => {
+
                                     setUsername(
                                         e.target.value
                                     )
-                                }
+
+                                }}
                             />
 
                             <TextField
                                 margin="normal"
                                 required
                                 fullWidth
+                                type="password"
                                 label="Password"
                                 value={password}
-                                type="password"
-                                onChange={(e) =>
+                                onChange={(e) => {
+
                                     setPassword(
                                         e.target.value
                                     )
-                                }
+
+                                }}
                             />
+
+                            {/* ERROR */}
 
                             <p
                                 style={{
-                                    color: "red"
+                                    color: "red",
+                                    marginTop: "10px"
                                 }}
                             >
                                 {error}
                             </p>
 
-                            {/* FACE AUTH COMPONENT */}
+                            {/* FACE AUTH */}
 
                             {
                                 !faceVerified
@@ -281,11 +307,11 @@ export default function Authentication() {
                                         <FaceAuth
                                             onSuccess={() => {
 
+                                                setFaceVerified(true);
+
                                                 alert(
                                                     "✅ Face Verified"
                                                 );
-
-                                                setFaceVerified(true);
 
                                             }}
                                         />
@@ -294,7 +320,8 @@ export default function Authentication() {
                                         <p
                                             style={{
                                                 color: "green",
-                                                fontWeight: "bold"
+                                                fontWeight: "bold",
+                                                marginTop: "15px"
                                             }}
                                         >
 
@@ -304,11 +331,17 @@ export default function Authentication() {
                                     )
                             }
 
+                            {/* SUBMIT BUTTON */}
+
                             <Button
                                 type="button"
                                 fullWidth
                                 variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
+                                sx={{
+                                    mt: 3,
+                                    mb: 2
+                                }}
+
                                 onClick={handleAuth}
                             >
 
@@ -327,6 +360,8 @@ export default function Authentication() {
                 </Grid>
 
             </Grid>
+
+            {/* SNACKBAR */}
 
             <Snackbar
                 open={open}

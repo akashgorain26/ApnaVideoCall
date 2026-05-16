@@ -34,9 +34,9 @@ export default function VideoMeetComponent() {
 
     let [audioAvailable, setAudioAvailable] = useState(true);
 
-    let [video, setVideo] = useState([]);
+    let [video, setVideo] = useState(true);
 
-    let [audio, setAudio] = useState();
+    let [audio, setAudio] = useState(true);
 
     let [screen, setScreen] = useState();
 
@@ -527,7 +527,12 @@ export default function VideoMeetComponent() {
 
                     <div className={styles.conferenceView}>
                         {videos.map((video) => (
-                            <div key={video.socketId}>
+                            <div
+                                key={video.socketId}
+                                style={{
+                                    position: "relative"
+                                     }}
+                            >
                                 <video
 
                                     data-socket={video.socketId}
@@ -539,6 +544,22 @@ export default function VideoMeetComponent() {
                                     autoPlay
                                 >
                                 </video>
+                                <p
+                                    style={{
+                                        position: "absolute",
+                                        bottom: "10px",
+                                        left: "10px",
+                                        color: "white",
+                                        background: "rgba(0,0,0,0.6)",
+                                        padding: "4px 10px",
+                                        borderRadius: "10px",
+                                          fontSize: "14px"
+                                 }}
+                                >
+
+    {username}
+
+</p>
                             </div>
 
                         ))}
